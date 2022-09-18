@@ -19,6 +19,8 @@ internal class BankControllerTest{
     @Autowired
     lateinit var mockMvc : MockMvc
 
+    private val baseUrl = "/api/banks"
+
     @Nested
     @DisplayName("getBanks()")
     @TestInstance(Lifecycle.PER_CLASS)
@@ -26,7 +28,7 @@ internal class BankControllerTest{
         @Test
         fun `should return all banks`(){
             //when/then
-            mockMvc.get("/api/banks")
+            mockMvc.get(baseUrl)
                 .andDo { print() }
                 .andExpect {
                     status { isOk() }
@@ -43,10 +45,10 @@ internal class BankControllerTest{
         @Test
         fun `should return the bank with the given account number`(){
             //given
-            val accountNumber = 1234
+            val accountNumber = "1234"
 
             //when/then
-            mockMvc.get("/api/banks/$accountNumber")
+            mockMvc.get("$baseUrl/$accountNumber")
                 .andDo { print() }
                 .andExpect {
                     status { isOk() }
@@ -54,6 +56,16 @@ internal class BankControllerTest{
                     jsonPath("$.trust") { value(1.0) }
                 }
         }
-
+    }
+    
+    @Test
+    fun `should return NOT FOUND if the account number does not exist`(){
+        //given
+        val accountNumber = "does_not_exist"
+        
+        //when/then
+        mockMvc.get("$baseUrl/$accountNumber")
+            .andDo { print() }
+            .andExpect { status { isNotFound() } }
     }
 }
