@@ -6,4 +6,5 @@ interface BankDataSource {
     fun retrieveBanks(): Collection<Bank>
     fun retrieveBank(accountNumber:String) : Bank
     fun createBank(newBank: Bank): Bank
+    fun updateBank(updatedBank: Bank): Bank
 }
